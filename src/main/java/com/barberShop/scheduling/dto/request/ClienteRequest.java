@@ -14,7 +14,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class ClienteRequest {
 
-    @CPF
+    @CPF(message = "O campo cpf é inválido")
     @NotNull(message = "O campo cpf é obrigatório")
     private String cpf;
 
@@ -27,11 +27,15 @@ public class ClienteRequest {
     @NotNull(message = "O campo telefone é obrigatório")
     private String phone;
 
-    @Email
+    @Email(message = "O campo email é inválido")
     @NotNull(message = "O campo email é obrigatório")
     private String email;
 
     @NotNull(message = "O campo data de nascimento é obrigatório")
     private LocalDate dateOfBirth;
+
+    @NotNull(message = "O campo senha é obrigatório")
+    private String password;
+
 
 }

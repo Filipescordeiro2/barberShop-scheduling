@@ -2,8 +2,10 @@ package com.barberShop.scheduling.mapper;
 
 import com.barberShop.scheduling.domain.Cliente;
 import com.barberShop.scheduling.dto.request.ClienteRequest;
+import com.barberShop.scheduling.dto.response.ClienteRegisterResponse;
 import com.barberShop.scheduling.dto.response.ClienteResponse;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 import java.util.List;
@@ -16,6 +18,9 @@ public interface ClienteMapper {
     Cliente convertDtoToEntity(ClienteRequest request);
 
     ClienteResponse convertEntityToDto(Cliente cliente);
+
+    @Mapping(target = "message", constant = "Cliente cadastrado com sucesso")
+    ClienteRegisterResponse convertEntityToClienteRegisterResponse(Cliente cliente);
 
     List<ClienteResponse> convertListEntityToListResponse(Iterable<Cliente> cliente);
 
