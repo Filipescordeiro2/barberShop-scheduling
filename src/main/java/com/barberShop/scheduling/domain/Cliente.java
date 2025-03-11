@@ -24,6 +24,8 @@ public class Cliente {
     private String nameComplete;
     private String phone;
     private String email;
+    private String login;
+    private String password;
     private LocalDate dateOfBirth;
     private Integer age;
     private LocalDateTime createdAt;
@@ -37,6 +39,7 @@ public class Cliente {
         this.updatedAt = LocalDateTime.now();
         this.nameComplete = this.name + " " + this.surname;
         this.age = LocalDate.now().getYear() - this.dateOfBirth.getYear();
+        this.login = this.email;
     }
 
     @PreUpdate
