@@ -24,6 +24,10 @@ A aplicação segue a arquitetura em camadas, permitindo escalabilidade e manute
 
 ### Cadastro de clientes
 POST
+```text
+ http://localhost:8080/cliente
+ ```
+- Request
 ```json
     {
       "cpf": "CPF",
@@ -35,10 +39,48 @@ POST
       "dateOfBirth": "2002-08-01"
     }
 ```
+- Reponse
+```json
+    {
+      "message": "Cliente cadastrado com sucesso",
+      "cpf": "CPF",
+      "createdAt": "2025-03-12T07:56:49.2283062"
+    }
+```
+
 ### Buscar Cliente CPF
 GET
 ```text
  http://localhost:8080/cliente/{cpf}
+```
+
+### Auth Cliente
+POST
+```text
+ http://localhost:8080/cliente/auth
+ ```
+- Request
+```json
+    {
+      "login":"joao.silva@example.com",
+      "password":"teste"
+    }
+```
+- Response
+```json
+{
+    "cpf": "CPF",
+    "name": "João",
+    "surname": "Silva",
+    "nameComplete": "João Silva",
+    "phone": "123456789",
+    "email": "joao.silva@example.com",
+    "age": 23,
+    "dateOfBirth": "2002-08-01",
+    "createdAt": "2025-03-12T07:56:49.228306",
+    "updatedAt": "2025-03-12T07:56:49.228306",
+    "active": true
+}
 ```
 
 ## Criado por
