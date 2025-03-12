@@ -18,26 +18,26 @@ public class ClienteService {
     private final ClienteRepository clienteRepository;
     private final ClienteValidation clienteValidation;
 
-    public ClienteRegisterResponse save (ClienteRequest request){
+    public ClienteRegisterResponse registerCliente (ClienteRequest request){
         try {
             clienteValidation.validPreSave(request);
             var cliente = ClienteMapper.INSTANCE.convertDtoToEntity(request);
             return ClienteMapper.INSTANCE.convertEntityToClienteRegisterResponse(clienteRepository.save(cliente));
         }catch (Exception e){
-            throw new ClienteException(e.getMessage());
+            throw new ClienteException("Error registering cliente: " + e.getMessage());
         }
     }
 
     public ClienteResponse findById(String cpf){
         return clienteRepository.findById(cpf)
                 .map(ClienteMapper.INSTANCE::convertEntityToDto)
-                .orElseThrow(() -> new ClienteException("Cliente não encontrado"));
+                .orElseThrow(() -> new ClienteException("Cliente not found with CPF: " + cpf));
     }
 
-    public ClienteResponse authCliente(LoginRequest request){
+    public ClienteResponse authenticateCliente(LoginRequest request){
         return clienteRepository.findByLoginAndPassword(request.getLogin(), request.getPassword())
                 .map(ClienteMapper.INSTANCE::convertEntityToDto)
-                .orElseThrow(() -> new ClienteException("Login ou senha invalidos"));
+                .orElseThrow(() -> new ClienteException("Invalid login or password"));
     }
 
 }
