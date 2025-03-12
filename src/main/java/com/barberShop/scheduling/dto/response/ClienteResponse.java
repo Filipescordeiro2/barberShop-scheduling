@@ -1,6 +1,5 @@
 package com.barberShop.scheduling.dto.response;
 
-
 import lombok.Builder;
 
 import java.time.LocalDate;
@@ -19,4 +18,5 @@ public record ClienteResponse(
         LocalDateTime createdAt,
         LocalDateTime updatedAt,
         boolean active
-) {}
+) {
+}
