@@ -8,7 +8,6 @@ import com.barberShop.scheduling.dto.response.ClienteResponse;
 import com.barberShop.scheduling.service.ClienteService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -19,7 +18,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 public class ClienteController {
 
     private final ClienteService clienteService;
-    private final PagedResourcesAssembler<Cliente> pagedResourcesAssembler;
 
     @PostMapping
     public ResponseEntity<ClienteRegisterResponse> createCliente(@Valid @RequestBody ClienteRequest request) {

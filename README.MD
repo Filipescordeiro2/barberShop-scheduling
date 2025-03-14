@@ -7,6 +7,7 @@ BarberShop é um gestor de barbearias, oferecendo funcionalidades para agendamen
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-6DB33F?style=for-the-badge&logo=spring-boot&logoColor=white)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-336791?style=for-the-badge&logo=postgresql&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
+![Swagger](https://img.shields.io/badge/Swagger-85EA2D?style=for-the-badge&logo=swagger&logoColor=black)
 
 ## Arquitetura usada
 A aplicação segue a arquitetura em camadas, permitindo escalabilidade e manutenção facilitada. Utiliza Spring Boot para a criação dos serviços RESTful.
@@ -71,68 +72,14 @@ Este comando faz o seguinte:
 
 ```
 
-## Cliente
+## Swagger
+Swagger está integrado na aplicação para fornecer uma interface amigável para testar e documentar os endpoints da API. 
+Você pode acessar a interface do Swagger na seguinte URL:
 
-### Cadastro de clientes
-POST
 ```text
- http://localhost:8080/cliente
- ```
-- Request
-```json
-    {
-      "cpf": "CPF",
-      "name": "João",
-      "surname": "Silva",
-      "phone": "123456789",
-      "email": "joao.silva@example.com",
-      "password":"teste",
-      "dateOfBirth": "2002-08-01"
-    }
+http://localhost:8080/swagger-ui/index.html
 ```
-- Reponse
-```json
-    {
-      "message": "Cliente cadastrado com sucesso",
-      "cpf": "CPF",
-      "createdAt": "2025-03-12T07:56:49.2283062"
-    }
-```
-
-### Buscar Cliente CPF
-GET
-```text
- http://localhost:8080/cliente/{cpf}
-```
-
-### Auth Cliente
-POST
-```text
- http://localhost:8080/cliente/auth
- ```
-- Request
-```json
-    {
-      "login":"joao.silva@example.com",
-      "password":"teste"
-    }
-```
-- Response
-```json
-{
-    "cpf": "CPF",
-    "name": "João",
-    "surname": "Silva",
-    "nameComplete": "João Silva",
-    "phone": "123456789",
-    "email": "joao.silva@example.com",
-    "age": 23,
-    "dateOfBirth": "2002-08-01",
-    "createdAt": "2025-03-12T07:56:49.228306",
-    "updatedAt": "2025-03-12T07:56:49.228306",
-    "active": true
-}
-```
+Esta interface permite explorar os endpoints disponíveis, visualizar os formatos de requisição e resposta, e executar chamadas de API diretamente do navegador.
 
 ## Criado por
 
