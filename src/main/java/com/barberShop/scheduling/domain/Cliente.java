@@ -32,6 +32,8 @@ public class Cliente {
     private LocalDateTime updatedAt;
     private boolean active;
 
+
+
     @PrePersist
     public void prePersist() {
         this.active = true;

@@ -5,7 +5,6 @@ import com.barberShop.scheduling.dto.response.BarbeariaRegisterResponse;
 import com.barberShop.scheduling.exception.BarbeariaException;
 import com.barberShop.scheduling.mapper.BarbeariaMapper;
 import com.barberShop.scheduling.repository.BarbeariaRepository;
-import com.barberShop.scheduling.repository.EnderecoBarbeariaRepository;
 import com.barberShop.scheduling.utils.BarbeariaValidation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,7 +14,6 @@ import org.springframework.stereotype.Service;
 public class BarbeariaService {
 
     private final BarbeariaRepository barbeariaRepository;
-    private final EnderecoBarbeariaRepository enderecoBarbeariaRepository;
     private final BarbeariaValidation barbeariaValidation;
 
     public BarbeariaRegisterResponse createBarbearia (BarbeariaRequest request){

@@ -28,6 +28,24 @@ public class BarbeariaRequest {
     @NotNull(message = "Password cannot be null")
     private String password;
 
-    @NotNull(message = "Address cannot be null")
-    private EnderecoBarbeariaRequest enderecoBarbearia;
+    @NotNull(message = "Cep cannot be null")
+    private String cep;
+
+    @NotNull(message = "Logradouro cannot be null")
+    private String logradouro;
+
+    @NotNull(message = "Bairro cannot be null")
+    private String bairro;
+
+    @NotNull(message = "Cidade cannot be null")
+    private String cidade;
+
+    @NotNull(message = "Estado cannot be null")
+    private String estado;
+
+    @NotNull(message = "Numero cannot be null")
+    private String numero;
+
+    @NotNull(message = "Complemento cannot be null")
+    private String complemento;
 }
