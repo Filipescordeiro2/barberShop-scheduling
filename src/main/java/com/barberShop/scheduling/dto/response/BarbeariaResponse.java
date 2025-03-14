@@ -13,6 +13,11 @@ public record BarbeariaResponse(
         LocalDateTime createdAt,
         LocalDateTime updatedAt,
         boolean active,
-        EnderecoBarbeariaResponse enderecoBarbearia
-) {
+        String cep,
+        String logradouro,
+        String bairro,
+        String cidade,
+        String estado,
+        String numero,
+        String complemento) {
 }

@@ -31,7 +31,7 @@ public class EnderecoBarbearia {
     private LocalDateTime updatedAt;
 
     @OneToOne
-    @JoinColumn(name = "barbearia_cnpj")
+    @JoinColumn(name = "id_barbearia",referencedColumnName = "cnpj")
     private Barbearia barbearia;
 
     @PrePersist
