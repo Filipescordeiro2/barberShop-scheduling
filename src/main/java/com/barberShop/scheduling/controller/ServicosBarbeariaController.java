@@ -1,8 +1,8 @@
 package com.barberShop.scheduling.controller;
 
-import com.barberShop.scheduling.dto.request.BarbeariaRequest;
-import com.barberShop.scheduling.dto.response.BarbeariaRegisterResponse;
-import com.barberShop.scheduling.service.BarbeariaService;
+import com.barberShop.scheduling.dto.request.ServicosBarbeariaRequest;
+import com.barberShop.scheduling.dto.response.ServicosBarbeariaResponse;
+import com.barberShop.scheduling.service.ServicosBarbeariaService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -13,20 +13,19 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @RestController
-@RequestMapping("/barbearia")
+@RequestMapping("/ServicosBarbearia")
 @RequiredArgsConstructor
-public class BarbeariaController {
+public class ServicosBarbeariaController {
 
-    private final BarbeariaService barbeariaService;
+    private final ServicosBarbeariaService servicosBarbearia;
 
     @PostMapping
-    public ResponseEntity<BarbeariaRegisterResponse> createBarbearia(@Valid @RequestBody BarbeariaRequest request) {
-        var response = barbeariaService.createBarbearia(request);
+    public ResponseEntity<ServicosBarbeariaResponse> createBarbearia(@Valid @RequestBody ServicosBarbeariaRequest request) {
+        var response = servicosBarbearia.createServicosBarbearia(request);
         return ResponseEntity.created(ServletUriComponentsBuilder.fromCurrentRequest()
                         .path("/{id}")
-                        .buildAndExpand(response.cnpj())
+                        .buildAndExpand(response.cnpjBarbearia())
                         .toUri())
                 .body(response);
     }
-
 }
