@@ -7,6 +7,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Builder
@@ -29,6 +31,9 @@ public class Barbearia {
 
     @OneToOne(mappedBy = "barbearia", cascade = CascadeType.ALL)
     private EnderecoBarbearia enderecoBarbearia;
+
+    @OneToMany(mappedBy = "barbearia", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ServicosBarbearia> services = new ArrayList<>();
 
     @PrePersist
     public void prePersist() {
