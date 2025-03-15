@@ -5,22 +5,21 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class ServicosBarbeariaRequest {
 
-    @NotNull(message = "O nome do serviço é obrigatório")
+    @NotNull(message = "Service name is required")
     private ServicosEnum servico;
 
-    @NotNull(message = "O cnpj da barbearia é obrigatório")
+    @NotNull(message = "Barber shop CNPJ is required")
     private String cnpjBarbearia;
 
-    @NotNull(message = "O preco do servico é obrigatório")
+    @NotNull(message = "Service price is required")
     private Double price;
 
-    @NotNull(message = "O tempo do servico é obrigatório")
+    @NotNull(message = "Service time is required")
     private Integer timeOfJob;
 }

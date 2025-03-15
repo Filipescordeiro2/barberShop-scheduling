@@ -17,6 +17,6 @@ public interface ServicosBarbeariaMapper {
     ServicosBarbearia convertDtoToEntity(ServicosBarbeariaRequest request);
 
     @Mapping(target = "cnpjBarbearia", source = "barbearia.cnpj")
-    @Mapping(target = "message", constant = "Serviço de barbearia cadastrado com sucesso")
+    @Mapping(target = "message", constant = "Barber shop service successfully registered")
     ServicosBarbeariaResponse convertEntityToServicosBarbeariaRegisterResponse(ServicosBarbearia servicosBarbearia);
 }
