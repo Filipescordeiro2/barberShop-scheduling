@@ -6,40 +6,37 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Cliente {
+public class ProfissionalBarbearia {
 
     @Id
-    private String cpf;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private UUID id;
 
-    private String name;
-    private String surname;
-    private String nameComplete;
-    private String phone;
-    private String email;
-    private String login;
-    private String password;
-    private LocalDate dateOfBirth;
-    private Integer age;
+    @ManyToOne
+    @JoinColumn(name = "id_profissional")
+    private Profissional profissional;
+
+    @ManyToOne
+    @JoinColumn(name = "id_barbearia")
+    private Barbearia barbearia;
+
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    private boolean active;
+    private Boolean active;
 
     @PrePersist
     public void prePersist() {
-        this.active = true;
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
-        this.nameComplete = this.name + " " + this.surname;
-        this.age = LocalDate.now().getYear() - this.dateOfBirth.getYear();
-        this.login = this.email;
+        this.active = true;
     }
 
     @PreUpdate

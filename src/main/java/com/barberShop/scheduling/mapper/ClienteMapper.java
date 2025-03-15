@@ -19,7 +19,7 @@ public interface ClienteMapper {
 
     ClienteResponse convertEntityToDto(Cliente cliente);
 
-    @Mapping(target = "message", constant = "Cliente cadastrado com sucesso")
+    @Mapping(target = "message", constant = "Client successfully registered")
     ClienteRegisterResponse convertEntityToClienteRegisterResponse(Cliente cliente);
 
     List<ClienteResponse> convertListEntityToListResponse(Iterable<Cliente> cliente);
