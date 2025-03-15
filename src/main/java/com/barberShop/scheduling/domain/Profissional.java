@@ -1,15 +1,14 @@
 package com.barberShop.scheduling.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreUpdate;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Data
@@ -28,7 +27,10 @@ public class Profissional {
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    private Boolean active;
+    private boolean active;
+
+    @OneToMany(mappedBy = "profissional", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProfissionalBarbearia> profissionalBarbearias = new ArrayList<>();
 
     @PrePersist
     public void prePersist() {
