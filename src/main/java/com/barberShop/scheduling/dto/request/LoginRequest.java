@@ -1,5 +1,6 @@
 package com.barberShop.scheduling.dto.request;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,6 +10,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class LoginRequest {
 
+        @NotNull(message = "Login cannot be null")
         private String login;
+        @NotNull(message = "Password cannot be null")
         private String password;
 }

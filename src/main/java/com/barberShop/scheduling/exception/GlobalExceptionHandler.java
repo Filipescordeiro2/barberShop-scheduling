@@ -45,6 +45,13 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(ProfissionalException.class)
+    public ResponseEntity<?> handleProfissionalException(ProfissionalException ex, WebRequest request) {
+        Map<String, String> errorResponse = new HashMap<>();
+        errorResponse.put("message", ex.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(InvalidServicoException.class)
     public ResponseEntity<?> handleInvalidServicoException(InvalidServicoException ex, WebRequest request) {
         Map<String, String> errorResponse = new HashMap<>();

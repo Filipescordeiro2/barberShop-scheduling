@@ -1,12 +1,14 @@
 package com.barberShop.scheduling.domain;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -14,32 +16,25 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Cliente {
+public class Profissional {
 
     @Id
     private String cpf;
 
-    private String name;
-    private String surname;
-    private String nameComplete;
-    private String phone;
+    private String nameProfissional;
     private String email;
-    private String login;
+    private String phone;
     private String password;
-    private LocalDate dateOfBirth;
-    private Integer age;
+
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    private boolean active;
+    private Boolean active;
 
     @PrePersist
     public void prePersist() {
-        this.active = true;
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
-        this.nameComplete = this.name + " " + this.surname;
-        this.age = LocalDate.now().getYear() - this.dateOfBirth.getYear();
-        this.login = this.email;
+        this.active = true;
     }
 
     @PreUpdate

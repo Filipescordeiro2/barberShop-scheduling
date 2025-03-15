@@ -35,6 +35,9 @@ public class Barbearia {
     @OneToMany(mappedBy = "barbearia", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ServicosBarbearia> services = new ArrayList<>();
 
+    @OneToMany(mappedBy = "barbearia", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProfissionalBarbearia> profissionalBarbearias = new ArrayList<>();
+
     @PrePersist
     public void prePersist() {
         this.active = true;
