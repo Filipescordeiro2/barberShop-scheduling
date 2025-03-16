@@ -9,6 +9,7 @@ import com.barberShop.scheduling.enums.StatusAgenda;
 import com.barberShop.scheduling.exception.ServicosBarbeariaException;
 import com.barberShop.scheduling.mapper.AgendaMapper;
 import com.barberShop.scheduling.repository.AgendaRepository;
+import com.barberShop.scheduling.repository.AgendamentoRepository;
 import com.barberShop.scheduling.utils.AgendaUtils;
 import com.barberShop.scheduling.utils.AgendaValidation;
 import com.barberShop.scheduling.utils.ValidacaoResultado;
@@ -27,6 +28,7 @@ public class AgendaService {
     private final AgendaRepository agendaRepository;
     private final AgendaValidation validation;
     private final AgendaUtils agendaUtils;
+    private final AgendamentoRepository agendamentoRepository;
     private final AgendaMapper agendaMapper = AgendaMapper.INSTANCE;
 
     public List<AgendaResponse> gerarAgenda(AgendaRequest request) {
@@ -144,11 +146,19 @@ public class AgendaService {
         if (agenda.getStatusAgenda() == StatusAgenda.CANCELADO) {
             throw new ServicosBarbeariaException("A agenda já está cancelada");
         }
+        var agendamentos = agendamentoRepository.findByAgenda(agenda);
+        if (!agendamentos.isEmpty()) {
+            agendamentos.stream().forEach(agendamento -> {
+                agendamento.setStatus(StatusAgenda.CANCELADO);
+                agendamentoRepository.save(agendamento);
+            });
+        }
         agenda.setStatusAgenda(StatusAgenda.CANCELADO);
         agendaRepository.save(agenda);
 
         return AgendaMapper.INSTANCE.convertEntityToCancelarResponse(agenda);
     }
+
 
     public List<AgendaResponse> buscarAgendaPorStatus(StatusAgenda status) {
         List<Agenda> agendaList = agendaRepository.findByStatusAgenda(status);

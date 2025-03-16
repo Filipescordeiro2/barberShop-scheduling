@@ -12,5 +12,6 @@ import java.util.UUID;
 public interface AgendaRepository extends JpaRepository<Agenda, UUID> {
     boolean existsByProfissionalCpfAndDateAndTime(String cpf, LocalDate date, LocalTime time);
     List<Agenda> findByStatusAgenda(StatusAgenda status);
+    List<Agenda> findByProfissionalCpf(String cpfProfissional);
 
 }
