@@ -21,6 +21,7 @@ public class Profissional {
     private String cpf;
 
     private String nameProfissional;
+    private String login;
     private String email;
     private String phone;
     private String password;
@@ -37,6 +38,7 @@ public class Profissional {
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
         this.active = true;
+        this.login = this.email;
     }
 
     @PreUpdate
