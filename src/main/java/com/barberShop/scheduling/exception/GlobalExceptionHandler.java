@@ -53,7 +53,14 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(RegraDeNegocioException.class)
-    public ResponseEntity<?> handleProfissionalException(RegraDeNegocioException ex, WebRequest request) {
+    public ResponseEntity<?> handleRegraDeNegocioException(RegraDeNegocioException ex, WebRequest request) {
+        Map<String, String> errorResponse = new HashMap<>();
+        errorResponse.put("message", ex.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(AgendamentoException.class)
+    public ResponseEntity<?> handleAgendamentoException(AgendamentoException ex, WebRequest request) {
         Map<String, String> errorResponse = new HashMap<>();
         errorResponse.put("message", ex.getMessage());
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);

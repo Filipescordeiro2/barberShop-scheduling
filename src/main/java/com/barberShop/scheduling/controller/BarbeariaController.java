@@ -1,15 +1,16 @@
 package com.barberShop.scheduling.controller;
 
 import com.barberShop.scheduling.dto.request.BarbeariaRequest;
+import com.barberShop.scheduling.dto.request.LoginRequest;
+import com.barberShop.scheduling.dto.response.BarbeariaDeseableResponse;
 import com.barberShop.scheduling.dto.response.BarbeariaRegisterResponse;
+import com.barberShop.scheduling.dto.response.BarbeariaResponse;
+import com.barberShop.scheduling.dto.response.ProfissionalReponse;
 import com.barberShop.scheduling.service.BarbeariaService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @RestController
@@ -27,6 +28,23 @@ public class BarbeariaController {
                         .buildAndExpand(response.cnpj())
                         .toUri())
                 .body(response);
+    }
+
+    @PostMapping("/auth")
+    public ResponseEntity<BarbeariaResponse> authenticateBarbearia(@Valid @RequestBody LoginRequest request) {
+        return ResponseEntity.ok(barbeariaService.authenticateBarbearia(request));
+    }
+
+    @GetMapping("/{cnpj}")
+    public ResponseEntity<BarbeariaResponse> findBarbeariaByCNPJ(@PathVariable String cnpj) {
+        var response = barbeariaService.findBarbeariaByCNPJ(cnpj);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/deseable/{cnpj}")
+    public ResponseEntity<BarbeariaDeseableResponse> deseableBarbearia(@PathVariable String cnpj) {
+        var response = barbeariaService.deseableBarbearia(cnpj);
+        return ResponseEntity.ok(response);
     }
 
 }

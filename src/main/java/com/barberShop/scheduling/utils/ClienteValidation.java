@@ -1,5 +1,6 @@
 package com.barberShop.scheduling.utils;
 
+import com.barberShop.scheduling.domain.Cliente;
 import com.barberShop.scheduling.dto.request.ClienteRequest;
 import com.barberShop.scheduling.exception.ClienteException;
 import com.barberShop.scheduling.repository.ClienteRepository;
@@ -27,5 +28,10 @@ public class ClienteValidation {
         if (clienteRepository.existsByEmail(email)) {
             throw new ClienteException("Client already registered with this email: " + email);
         }
+    }
+
+    public Cliente findByCpf(String cpf){
+        return clienteRepository.findById(cpf)
+                .orElseThrow(() -> new ClienteException("Cliente not found with CPF: " + cpf));
     }
 }
