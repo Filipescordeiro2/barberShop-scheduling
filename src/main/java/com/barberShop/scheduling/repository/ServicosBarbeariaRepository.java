@@ -9,5 +9,5 @@ import java.util.UUID;
 
 public interface ServicosBarbeariaRepository extends JpaRepository<ServicosBarbearia, UUID> {
     Optional<ServicosBarbearia> findByServicesAndBarbeariaCnpjAndActiveTrue(ServicosEnum services, String cnpjBarbearia);
-
+    Optional<ServicosBarbearia> findByServicesAndBarbeariaCnpj(ServicosEnum services, String cnpjBarbearia);
 }

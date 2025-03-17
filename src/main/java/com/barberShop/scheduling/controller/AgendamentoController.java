@@ -21,25 +21,25 @@ public class AgendamentoController {
 
     @PostMapping
     public ResponseEntity<AgendamentoResponse> criarAgendamento(@RequestBody AgendamentoRequest request)   {
-        AgendamentoResponse response = agendamentoService.criarAgendamento(request);
+        AgendamentoResponse response = agendamentoService.createAppointment(request);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{agendaId}")
     public ResponseEntity<List<AgendamentoDetalhadaResponse>> getAgendamentoDetalhado(@PathVariable UUID agendaId) {
-        List<AgendamentoDetalhadaResponse> response = agendamentoService.getAgendamentoDetalhado(agendaId);
+        List<AgendamentoDetalhadaResponse> response = agendamentoService.getDetailedAppointment(agendaId);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/cliente/{cpf}")
     public ResponseEntity<List<AgendamentoDetalhadaResponse>> getAgendamentoDetalhadoPorCpf(@PathVariable String cpf) {
-        List<AgendamentoDetalhadaResponse> response = agendamentoService.getAgendamentoDetalhadoPorCpf(cpf);
+        List<AgendamentoDetalhadaResponse> response = agendamentoService.getDetailedAppointmentByCpf(cpf);
         return ResponseEntity.ok(response);
     }
 
     @PostMapping("/cancelar/{agendamentoId}")
     public ResponseEntity<AgendamentoCancelarResponse> cancelarAgendamento(@PathVariable UUID agendamentoId) {
-        AgendamentoCancelarResponse response = agendamentoService.cancelarAgendamento(agendamentoId);
+        AgendamentoCancelarResponse response = agendamentoService.cancelAppointment(agendamentoId);
         return ResponseEntity.ok(response);
     }
 }

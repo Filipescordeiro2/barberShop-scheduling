@@ -22,4 +22,8 @@ public class ProfissionalBarbeariaService {
         }catch (Exception e){
             throw new ServicosBarbeariaException("Error link profissional in  barbearia: " + e.getMessage());
         }
-    }}
+    }
+
+
+
+}

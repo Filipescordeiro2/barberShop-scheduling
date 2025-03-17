@@ -1,30 +1,29 @@
 package com.barberShop.scheduling.utils;
 
-import com.barberShop.scheduling.domain.Agendamento;
 import com.barberShop.scheduling.enums.StatusAgenda;
 import com.barberShop.scheduling.repository.AgendaRepository;
 import com.barberShop.scheduling.repository.AgendamentoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.util.UUID;
-
 @Component
 @RequiredArgsConstructor
-public class AgendamentoUtils {
+public class BarbeariaUtils {
 
     private final AgendaRepository agendaRepository;
     private final AgendamentoRepository agendamentoRepository;
 
-    public void updateAgendaStatusToOpen(UUID agendaId) {
-        agendaRepository.findById(agendaId).ifPresent(agenda -> {
-            agenda.setStatusAgenda(StatusAgenda.ABERTO);
+    public void cancelAgendasAndAgendamentos(String cnpj) {
+        var agendas = agendaRepository.findByBarbeariaCnpj(cnpj);
+        agendas.forEach(agenda -> {
+            agenda.setStatusAgenda(StatusAgenda.CANCELADO);
             agendaRepository.save(agenda);
         });
-    }
 
-    public void cancelAppointment(Agendamento appointment) {
-        appointment.setStatus(StatusAgenda.CANCELADO);
-        agendamentoRepository.save(appointment);
+        var agendamentos = agendamentoRepository.findByAgenda_Barbearia_cnpj(cnpj);
+        agendamentos.forEach(agendamento -> {
+            agendamento.setStatus(StatusAgenda.CANCELADO);
+            agendamentoRepository.save(agendamento);
+        });
     }
 }

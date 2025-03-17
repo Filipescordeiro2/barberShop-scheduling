@@ -6,10 +6,10 @@ import com.barberShop.scheduling.dto.response.AgendamentoCancelarResponse;
 import com.barberShop.scheduling.dto.response.AgendamentoDetalhadaResponse;
 import com.barberShop.scheduling.dto.response.AgendamentoResponse;
 import com.barberShop.scheduling.enums.StatusAgenda;
-import com.barberShop.scheduling.exception.ServicosBarbeariaException;
 import com.barberShop.scheduling.mapper.AgendamentoMapper;
 import com.barberShop.scheduling.repository.AgendaRepository;
 import com.barberShop.scheduling.repository.AgendamentoRepository;
+import com.barberShop.scheduling.utils.AgendamentoUtils;
 import com.barberShop.scheduling.utils.AgendamentoValidation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,62 +26,60 @@ public class AgendamentoService {
     private final AgendamentoRepository agendamentoRepository;
     private final AgendaRepository agendaRepository;
     private final AgendamentoValidation agendamentoValidation;
+    private final AgendamentoUtils agendamentoUtils;
     private final AgendamentoMapper agendamentoMapper = AgendamentoMapper.INSTANCE;
 
     @Transactional
-    public AgendamentoResponse criarAgendamento(AgendamentoRequest request) {
+    public AgendamentoResponse createAppointment(AgendamentoRequest request) {
+
         var agenda = agendamentoValidation.validateAgenda(request.getAgendaId());
-        var cliente = agendamentoValidation.validateCliente(request.getClienteId());
+        var client = agendamentoValidation.validateClient(request.getClienteId());
 
         agendamentoValidation.validateAgendaStatus(agenda);
-        agendamentoValidation.validateProfissionalStatus(agenda.getProfissional());
-        agendamentoValidation.validateBarbeariaStatus(agenda.getBarbearia());
+        agendamentoValidation.validateProfessionalStatus(agenda.getProfissional());
+        agendamentoValidation.validateBarberShopStatus(agenda.getBarbearia());
 
-        var agendamento = new Agendamento();
-        agendamento.setAgenda(agenda);
-        agendamento.setCliente(cliente);
-        agendamentoRepository.save(agendamento);
+        var appointment = new Agendamento();
+        appointment.setAgenda(agenda);
+        appointment.setCliente(client);
+        agendamentoRepository.save(appointment);
 
         agenda.setStatusAgenda(StatusAgenda.AGENDADO);
         agendaRepository.save(agenda);
 
-        return agendamentoMapper.convertEntityToResponse(agendamento);
+        return agendamentoMapper.convertEntityToResponse(appointment);
     }
 
     @Transactional
-    public List<AgendamentoDetalhadaResponse> getAgendamentoDetalhado(UUID agendaId) {
+    public List<AgendamentoDetalhadaResponse> getDetailedAppointment(UUID agendaId) {
+
         var agenda = agendamentoValidation.validateAgenda(agendaId);
-        var agendamentos = agendamentoRepository.findByAgenda(agenda);
+        var appointments = agendamentoRepository.findByAgenda(agenda);
 
-        return agendamentos.stream()
+        return appointments.stream()
                 .map(agendamentoMapper::convertEntityToDetalhadaResponse)
                 .collect(Collectors.toList());
     }
 
     @Transactional
-    public List<AgendamentoDetalhadaResponse> getAgendamentoDetalhadoPorCpf(String cpf) {
-        var cliente = agendamentoValidation.validateClienteCPF(cpf);
-        var agendamentos = agendamentoRepository.findByCliente(cliente);
+    public List<AgendamentoDetalhadaResponse> getDetailedAppointmentByCpf(String cpf) {
 
-        return agendamentos.stream()
+        var client = agendamentoValidation.validateClientByCpf(cpf);
+        var appointments = agendamentoRepository.findByCliente(client);
+
+        return appointments.stream()
                 .map(agendamentoMapper::convertEntityToDetalhadaResponse)
                 .collect(Collectors.toList());
     }
 
     @Transactional
-    public AgendamentoCancelarResponse cancelarAgendamento(UUID agendamentoId) {
-        var agendamento = agendamentoRepository.findById(agendamentoId)
-                .orElseThrow(() -> new ServicosBarbeariaException("Agendamento not found"));
-        if (agendamento.getStatus() == StatusAgenda.CANCELADO) {
-            throw new ServicosBarbeariaException("Agendamento já está cancelada");
-        }
-        agendaRepository.findById(agendamento.getAgenda().getId()).stream().forEach(agenda -> {
-            agenda.setStatusAgenda(StatusAgenda.ABERTO);
-            agendaRepository.save(agenda);
-        });
-        agendamento.setStatus(StatusAgenda.CANCELADO);
-        agendamentoRepository.save(agendamento);
+    public AgendamentoCancelarResponse cancelAppointment(UUID appointmentId) {
 
-        return AgendamentoMapper.INSTANCE.convertEntityToCancelarResponse(agendamento);
+        var appointment = agendamentoValidation.validateAppointmentExists(appointmentId);
+        agendamentoValidation.validateAppointmentNotCancelled(appointment);
+        agendamentoUtils.updateAgendaStatusToOpen(appointment.getAgenda().getId());
+        agendamentoUtils.cancelAppointment(appointment);
+
+        return agendamentoMapper.convertEntityToCancelarResponse(appointment);
     }
 }

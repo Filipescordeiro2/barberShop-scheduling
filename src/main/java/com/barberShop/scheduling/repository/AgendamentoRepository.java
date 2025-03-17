@@ -13,5 +13,6 @@ public interface AgendamentoRepository extends JpaRepository<Agendamento, UUID> 
     Optional<Agendamento> findByAgenda(Agenda agenda);
     List<Agendamento> findByCliente(Cliente cliente);
     List<Agendamento> findByAgenda_Profissional_Cpf(String cpfProfissional);
+    List<Agendamento> findByAgenda_Barbearia_cnpj(String cnpjBarbearia);
 
 }

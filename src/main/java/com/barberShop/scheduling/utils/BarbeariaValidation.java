@@ -1,5 +1,6 @@
 package com.barberShop.scheduling.utils;
 
+import com.barberShop.scheduling.domain.Barbearia;
 import com.barberShop.scheduling.dto.request.BarbeariaRequest;
 import com.barberShop.scheduling.exception.BarbeariaException;
 import com.barberShop.scheduling.repository.BarbeariaRepository;
@@ -27,5 +28,10 @@ public class BarbeariaValidation {
         if (barbeariaRepository.existsByEmail(email)) {
             throw new BarbeariaException("Barber already registered with this email: " + email);
         }
+    }
+
+    public Barbearia validateAndGetBarbearia(String cnpj) {
+        return barbeariaRepository.findById(cnpj)
+                .orElseThrow(() -> new BarbeariaException("Barbearia not found"));
     }
 }

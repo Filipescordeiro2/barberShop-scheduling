@@ -22,6 +22,7 @@ public class ProfissionalService {
 
     public ProfissionalRegisterResponse registerProfissional (ProfissionalRequest request){
         try {
+            profissionalValidation.validPreSave(request);
             var profissional = ProfissionalMapper.INSTANCE.convertDtoToEntity(request);
             return ProfissionalMapper.INSTANCE.convertEntityToClienteRegisterResponse(profissionalRepository.save(profissional));
         }catch (Exception e){

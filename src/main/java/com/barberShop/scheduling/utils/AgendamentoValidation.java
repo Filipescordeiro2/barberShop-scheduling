@@ -1,12 +1,13 @@
 package com.barberShop.scheduling.utils;
+
 import com.barberShop.scheduling.domain.*;
 import com.barberShop.scheduling.enums.StatusAgenda;
-import com.barberShop.scheduling.exception.RegraDeNegocioException;
+import com.barberShop.scheduling.exception.AgendamentoException;
+import com.barberShop.scheduling.exception.ServicosBarbeariaException;
 import com.barberShop.scheduling.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
 import java.util.UUID;
 
 @Component
@@ -21,58 +22,52 @@ public class AgendamentoValidation {
 
     public Agenda validateAgenda(UUID agendaId) {
         if (agendaId == null) {
-            throw new IllegalArgumentException("O ID da agenda não pode ser nulo");
+            throw new IllegalArgumentException("Agenda ID cannot be null");
         }
         return agendaRepository.findById(agendaId)
-                .orElseThrow(() -> new RegraDeNegocioException("Agenda não encontrada"));
+                .orElseThrow(() -> new AgendamentoException("Agenda not found"));
     }
 
-    public Agendamento validateAgendamento(Agenda agenda) {
-        return agendamentoRepository.findByAgenda(agenda)
-                .orElseThrow(() -> new RegraDeNegocioException("Agendamento não encontrado para a agenda fornecida"));
+    public Cliente validateClient(String clientId) {
+        return clienteRepository.findById(clientId)
+                .orElseThrow(() -> new AgendamentoException("Client not found"));
     }
 
-    public Cliente validateCliente(String clienteId) {
-        return clienteRepository.findById(clienteId)
-                .orElseThrow(() -> new RegraDeNegocioException("Cliente não encontrado"));
-    }
-
-    public Cliente validateClienteCPF(String cpf) {
+    public Cliente validateClientByCpf(String cpf) {
         if (cpf == null || cpf.isEmpty()) {
-            throw new IllegalArgumentException("O CPF do cliente não pode ser nulo ou vazio");
+            throw new IllegalArgumentException("Client CPF cannot be null or empty");
         }
         return clienteRepository.findById(cpf)
-                .orElseThrow(() -> new RegraDeNegocioException("Cliente não encontrado"));
-    }
-
-    public Barbearia validateBarbearia(String barbeariaId) {
-        return barbeariaRepository.findById(barbeariaId)
-                .orElseThrow(() -> new RegraDeNegocioException("Barbearia não encontrada"));
+                .orElseThrow(() -> new AgendamentoException("Client not found"));
     }
 
     public void validateAgendaStatus(Agenda agenda) {
         if (!agenda.getStatusAgenda().equals(StatusAgenda.ABERTO)) {
-            throw new RegraDeNegocioException("A agenda não está aberta para agendamento");
+            throw new AgendamentoException("The agenda is not open for appointments");
         }
     }
 
-    public void validateProfissionalStatus(Profissional profissional) {
-        if (!profissional.isActive()) {
-            throw new RegraDeNegocioException("O profissional não está ativo.");
+    public void validateProfessionalStatus(Profissional professional) {
+        if (!professional.isActive()) {
+            throw new AgendamentoException("The professional is not active");
         }
     }
 
-    public void validateBarbeariaStatus(Barbearia barbearia) {
-        if (!barbearia.isActive()) {
-            throw new RegraDeNegocioException("A barbearia não está ativa.");
+    public void validateBarberShopStatus(Barbearia barberShop) {
+        if (!barberShop.isActive()) {
+            throw new AgendamentoException("The barber shop is not active");
         }
     }
 
-    public List<Agendamento> validateAgendamentosByCliente(Cliente cliente) {
-        List<Agendamento> agendamentos = agendamentoRepository.findByCliente(cliente);
-        if (agendamentos.isEmpty()) {
-            throw new RegraDeNegocioException("Nenhum agendamento encontrado para o cliente fornecido");
+
+    public Agendamento validateAppointmentExists(UUID appointmentId) {
+        return agendamentoRepository.findById(appointmentId)
+                .orElseThrow(() -> new ServicosBarbeariaException("Appointment not found"));
+    }
+
+    public void validateAppointmentNotCancelled(Agendamento appointment) {
+        if (appointment.getStatus() == StatusAgenda.CANCELADO) {
+            throw new ServicosBarbeariaException("Appointment is already cancelled");
         }
-        return agendamentos;
     }
 }

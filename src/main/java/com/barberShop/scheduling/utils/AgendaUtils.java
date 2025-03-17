@@ -8,9 +8,12 @@ import com.barberShop.scheduling.enums.JornadaEnum;
 import com.barberShop.scheduling.enums.StatusAgenda;
 import com.barberShop.scheduling.exception.ServicosBarbeariaException;
 import com.barberShop.scheduling.repository.AgendaRepository;
+import com.barberShop.scheduling.repository.AgendamentoRepository;
 import com.barberShop.scheduling.repository.ProfissionalRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -18,62 +21,78 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static org.apache.coyote.http11.Constants.a;
+
 @Component
 @RequiredArgsConstructor
 public class AgendaUtils {
 
-    private final ProfissionalRepository profissionalRepository;
     private final AgendaRepository agendaRepository;
+    private final AgendamentoRepository agendamentoRepository;
+    private final AgendaValidation validation;
 
-    public static List<Agenda> filterAgendasByProfissional(List<Agenda> agendas, String cpfProfissional, ProfissionalRepository profissionalRepository) {
-        if (cpfProfissional != null) {
-            if (!profissionalRepository.existsById(cpfProfissional)) {
-                throw new ServicosBarbeariaException("Profissional não encontrado");
-            }
-            return agendas.stream()
-                    .filter(agenda -> agenda.getProfissional().isActive())
-                    .collect(Collectors.toList());
+    public void cancelAppointments(Agenda agenda) {
+        var appointments = agendamentoRepository.findByAgenda(agenda);
+        if (!appointments.isEmpty()) {
+            appointments.stream().forEach(appointment -> {
+                appointment.setStatus(StatusAgenda.CANCELADO);
+                agendamentoRepository.save(appointment);
+            });
         }
-        return agendas;
     }
 
-    public static List<Agenda> filterAgendasByBarbearia(List<Agenda> agendas, String cnpjBarbearia) {
-        return agendas.stream()
-                .filter(agenda -> agenda.getBarbearia().getCnpj().equals(cnpjBarbearia))
-                .filter(agenda -> agenda.getProfissional().isActive())
-                .collect(Collectors.toList());
+    public void cancelSchedule(Agenda agenda) {
+        agenda.setStatusAgenda(StatusAgenda.CANCELADO);
+        agendaRepository.save(agenda);
     }
 
-    public static List<Agenda> filterAgendas(List<Agenda> agendas, LocalDate data, LocalTime hora, String nomeProfissional, String nomeServico) {
-        return agendas.stream()
-                .filter(agenda -> agenda.getStatusAgenda() == StatusAgenda.ABERTO || agenda.getStatusAgenda() == StatusAgenda.AGENDADO)
-                .filter(agenda -> data == null || agenda.getDate().equals(data))
-                .filter(agenda -> hora == null || agenda.getTime().equals(hora))
-                .filter(agenda -> nomeProfissional == null || agenda.getProfissional().getNameProfissional().equalsIgnoreCase(nomeProfissional))
-                .filter(agenda -> nomeServico == null || agenda.getServicosBarbearia().getServices().name().equalsIgnoreCase(nomeServico))
-                .collect(Collectors.toList());
-    }
-
-    public List<Agenda> gerarHorarios(Profissional profissional,
-                                      Barbearia barbearia,
-                                      ServicosBarbearia servico,
-                                      LocalDate data, LocalTime inicio,
-                                      LocalTime fim, int intervaloMinutos, JornadaEnum jornada) {
-        List<Agenda> horarios = new ArrayList<>();
-        LocalTime horarioAtual = inicio;
-        while (horarioAtual.isBefore(fim)) {
+    public List<Agenda> generateSchedules(Profissional professional,
+                                          Barbearia barberShop,
+                                          ServicosBarbearia service,
+                                          LocalDate date, LocalTime start,
+                                          LocalTime end, int intervalMinutes, JornadaEnum shift) {
+        List<Agenda> schedules = new ArrayList<>();
+        LocalTime currentTime = start;
+        while (currentTime.isBefore(end)) {
             Agenda entity = new Agenda();
-            entity.setProfissional(profissional);
-            entity.setBarbearia(barbearia);
-            entity.setServicosBarbearia(servico);
-            entity.setDate(data);
-            entity.setTime(horarioAtual);
-            entity.setJornada(jornada);
+            entity.setProfissional(professional);
+            entity.setBarbearia(barberShop);
+            entity.setServicosBarbearia(service);
+            entity.setDate(date);
+            entity.setTime(currentTime);
+            entity.setJornada(shift);
             entity.setStatusAgenda(StatusAgenda.ABERTO);
 
-            horarios.add(entity);
-            horarioAtual = horarioAtual.plusMinutes(intervaloMinutos);
+            schedules.add(entity);
+            currentTime = currentTime.plusMinutes(intervalMinutes);
         }
-        return horarios;
+        return schedules;
     }
+
+    public List<Agenda> findAgendaFiltro(String cpf, StatusAgenda statusAgenda,
+                                         LocalDate startDate, LocalDate endDate) {
+        List<Agenda> agendaList;
+        if (startDate == null && endDate == null) {
+            agendaList = agendaRepository.findByProfissionalCpfAndStatusAgenda(cpf, statusAgenda);
+        } else if (startDate == null) {
+            agendaList = agendaRepository.findByProfissionalCpfAndStatusAgendaAndDateBefore(cpf, statusAgenda, endDate);
+        } else if (endDate == null) {
+            agendaList = agendaRepository.findByProfissionalCpfAndStatusAgendaAndDateAfter(cpf, statusAgenda, startDate);
+        } else if (statusAgenda == null && cpf == null) {
+            validation.checkDateBetween(startDate, endDate);
+            agendaList = agendaRepository.findByDateBetween(startDate, endDate);
+        } else if (statusAgenda == null) {
+            validation.checkDateBetween(startDate, endDate);
+            agendaList = agendaRepository.findByProfissionalCpfAndDateBetween(cpf, startDate, endDate);
+        } else if (cpf == null) {
+            validation.checkDateBetween(startDate, endDate);
+            agendaList = agendaRepository.findByStatusAgendaAndDateBetween(statusAgenda, startDate, endDate);
+        } else {
+            validation.checkDateBetween(startDate, endDate);
+            agendaList = agendaRepository.findByProfissionalCpfAndStatusAgendaAndDateBetween(cpf,
+                    statusAgenda, startDate, endDate);
+        }
+        return agendaList;
+    }
+
 }

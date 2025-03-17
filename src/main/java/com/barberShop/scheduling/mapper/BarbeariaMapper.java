@@ -1,7 +1,10 @@
 package com.barberShop.scheduling.mapper;
 
+import com.barberShop.scheduling.domain.Agendamento;
 import com.barberShop.scheduling.domain.Barbearia;
 import com.barberShop.scheduling.dto.request.BarbeariaRequest;
+import com.barberShop.scheduling.dto.response.AgendamentoCancelarResponse;
+import com.barberShop.scheduling.dto.response.BarbeariaDeseableResponse;
 import com.barberShop.scheduling.dto.response.BarbeariaRegisterResponse;
 import com.barberShop.scheduling.dto.response.BarbeariaResponse;
 import org.mapstruct.Mapper;
@@ -33,7 +36,11 @@ public interface BarbeariaMapper {
     @Mapping(target = "complemento", source = "enderecoBarbearia.complemento")
     BarbeariaResponse convertEntityToDto(Barbearia barbearia);
 
+
+    @Mapping(target = "message", constant = "Barbearia desativada com sucesso")
+    BarbeariaDeseableResponse convertEntityToBarbeariaDeseableResponse(Barbearia barbearia);
+
     @Mapping(target = "message", constant = "Barbearia cadastrado com sucesso")
-    BarbeariaRegisterResponse convertEntityToClienteRegisterResponse(Barbearia barbearia);
+    BarbeariaRegisterResponse convertEntityToBarbeariaRegisterResponse(Barbearia barbearia);
 
 }
