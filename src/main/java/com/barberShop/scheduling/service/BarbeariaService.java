@@ -1,11 +1,15 @@
 package com.barberShop.scheduling.service;
 
 import com.barberShop.scheduling.dto.request.BarbeariaRequest;
+import com.barberShop.scheduling.dto.request.LoginRequest;
 import com.barberShop.scheduling.dto.response.BarbeariaDeseableResponse;
 import com.barberShop.scheduling.dto.response.BarbeariaRegisterResponse;
 import com.barberShop.scheduling.dto.response.BarbeariaResponse;
+import com.barberShop.scheduling.dto.response.ClienteResponse;
 import com.barberShop.scheduling.exception.BarbeariaException;
+import com.barberShop.scheduling.exception.ClienteException;
 import com.barberShop.scheduling.mapper.BarbeariaMapper;
+import com.barberShop.scheduling.mapper.ClienteMapper;
 import com.barberShop.scheduling.repository.BarbeariaRepository;
 import com.barberShop.scheduling.utils.BarbeariaUtils;
 import com.barberShop.scheduling.utils.BarbeariaValidation;
@@ -31,6 +35,12 @@ public class BarbeariaService {
         }catch (Exception e){
             throw new BarbeariaException("Error creating barbearia: " + e.getMessage());
         }
+    }
+
+    public BarbeariaResponse authenticateBarbearia(LoginRequest request){
+        return barbeariaRepository.findByLoginAndPassword(request.getLogin(), request.getPassword())
+                .map(BarbeariaMapper.INSTANCE::convertEntityToDto)
+                .orElseThrow(() -> new BarbeariaException("Invalid login or password"));
     }
 
     public BarbeariaResponse findBarbeariaByCNPJ(String cnpj){

@@ -1,9 +1,11 @@
 package com.barberShop.scheduling.controller;
 
 import com.barberShop.scheduling.dto.request.BarbeariaRequest;
+import com.barberShop.scheduling.dto.request.LoginRequest;
 import com.barberShop.scheduling.dto.response.BarbeariaDeseableResponse;
 import com.barberShop.scheduling.dto.response.BarbeariaRegisterResponse;
 import com.barberShop.scheduling.dto.response.BarbeariaResponse;
+import com.barberShop.scheduling.dto.response.ProfissionalReponse;
 import com.barberShop.scheduling.service.BarbeariaService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +28,11 @@ public class BarbeariaController {
                         .buildAndExpand(response.cnpj())
                         .toUri())
                 .body(response);
+    }
+
+    @PostMapping("/auth")
+    public ResponseEntity<BarbeariaResponse> authenticateBarbearia(@Valid @RequestBody LoginRequest request) {
+        return ResponseEntity.ok(barbeariaService.authenticateBarbearia(request));
     }
 
     @GetMapping("/{cnpj}")
