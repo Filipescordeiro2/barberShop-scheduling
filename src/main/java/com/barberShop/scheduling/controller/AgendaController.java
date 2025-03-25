@@ -1,6 +1,7 @@
 package com.barberShop.scheduling.controller;
 
 import com.barberShop.scheduling.dto.request.AgendaRequest;
+import com.barberShop.scheduling.dto.request.AgendaRequestWithoutJornada;
 import com.barberShop.scheduling.dto.response.AgendaCancelarResponse;
 import com.barberShop.scheduling.dto.response.AgendaResponse;
 import com.barberShop.scheduling.enums.StatusAgenda;
@@ -21,25 +22,25 @@ public class AgendaController {
     private final AgendaService agendaService;
 
     @PostMapping("/gerar")
-    public ResponseEntity<List<AgendaResponse>> gerarAgenda(@RequestBody AgendaRequest request) {
+    public ResponseEntity<List<AgendaResponse>> gerarAgenda(@RequestBody AgendaRequestWithoutJornada request) {
         List<AgendaResponse> response = agendaService.generateSchedule(request);
         return ResponseEntity.ok(response);
     }
 
     @PostMapping("/gerar/manha")
-    public ResponseEntity<List<AgendaResponse>> gerarAgendaDaManha(@RequestBody AgendaRequest request) {
+    public ResponseEntity<List<AgendaResponse>> gerarAgendaDaManha(@RequestBody AgendaRequestWithoutJornada request) {
         List<AgendaResponse> response = agendaService.generateMorningSchedule(request);
         return ResponseEntity.ok(response);
     }
 
     @PostMapping("/gerar/tarde")
-    public ResponseEntity<List<AgendaResponse>> gerarAgendaDaTarde(@RequestBody AgendaRequest request) {
+    public ResponseEntity<List<AgendaResponse>> gerarAgendaDaTarde(@RequestBody AgendaRequestWithoutJornada request) {
         List<AgendaResponse> response = agendaService.generateAfternoonSchedule(request);
         return ResponseEntity.ok(response);
     }
 
     @PostMapping("/gerar/noite")
-    public ResponseEntity<List<AgendaResponse>> gerarAgendaDaNoite(@RequestBody AgendaRequest request) {
+    public ResponseEntity<List<AgendaResponse>> gerarAgendaDaNoite(@RequestBody AgendaRequestWithoutJornada request) {
         List<AgendaResponse> response = agendaService.generateEveningSchedule(request);
         return ResponseEntity.ok(response);
     }
@@ -50,7 +51,7 @@ public class AgendaController {
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/cancelar/{id}")
+    @PatchMapping("/cancelar/{id}")
     public ResponseEntity<AgendaCancelarResponse> cancelarAgenda(@PathVariable UUID id) {
         AgendaCancelarResponse response = agendaService.cancelSchedule(id);
         return ResponseEntity.ok(response);

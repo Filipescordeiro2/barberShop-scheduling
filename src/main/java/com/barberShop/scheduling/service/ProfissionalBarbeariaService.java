@@ -16,6 +16,9 @@ public class ProfissionalBarbeariaService {
 
     public ProfissionalBarbeariaResponse createProfissionalBarbearia (ProfissionalBarbeariaRequest request){
         try {
+            if(profissionalBarbeariaRepository.existsByProfissionalCpfAndBarbeariaCnpj(request.getCpfProfissional(),request.getCnpjBarbearia())){
+                throw new ServicosBarbeariaException("Profissional already linked in barbearia");
+            }
             var profissionalBarbearia = ProfissionalBarbeariaMapper.INSTANCE.convertDtoToEntity(request);
             return ProfissionalBarbeariaMapper.INSTANCE.
                     convertEntityToProfissionalBarbeariaResponse(profissionalBarbeariaRepository.save(profissionalBarbearia));

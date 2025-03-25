@@ -21,7 +21,7 @@ public class ProfissionaisBarbeariaController {
 
     private final ProfissionalBarbeariaService profissionalBarbeariaService;
 
-    @PostMapping
+    @PostMapping("/linked")
     public ResponseEntity<ProfissionalBarbeariaResponse> createBarbearia(@Valid @RequestBody ProfissionalBarbeariaRequest request) {
         var response = profissionalBarbeariaService.createProfissionalBarbearia(request);
         return ResponseEntity.created(ServletUriComponentsBuilder.fromCurrentRequest()

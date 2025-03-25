@@ -52,6 +52,10 @@ public class AgendaValidation {
         }
     }
 
+    public boolean checkScheduleConflictPeriod(String cpfProfissional, LocalDate date, LocalTime time) {
+        return agendaRepository.existsByProfissionalCpfAndDateAndTime(cpfProfissional, date, time);
+    }
+
     public Profissional validateProfessional(String cpfProfissional) {
         return profissionalRepository.findById(cpfProfissional)
                 .orElseThrow(() -> new ServicosBarbeariaException("Professional not found"));

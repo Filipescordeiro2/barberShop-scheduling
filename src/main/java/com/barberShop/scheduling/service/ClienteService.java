@@ -2,6 +2,7 @@ package com.barberShop.scheduling.service;
 
 import com.barberShop.scheduling.dto.request.ClienteRequest;
 import com.barberShop.scheduling.dto.request.LoginRequest;
+import com.barberShop.scheduling.dto.response.ClienteActivateResponse;
 import com.barberShop.scheduling.dto.response.ClienteDeseableResponse;
 import com.barberShop.scheduling.dto.response.ClienteRegisterResponse;
 import com.barberShop.scheduling.dto.response.ClienteResponse;
@@ -38,9 +39,20 @@ public class ClienteService {
     }
 
     public ClienteResponse authenticateCliente(LoginRequest request){
-        return clienteRepository.findByLoginAndPassword(request.getLogin(), request.getPassword())
-                .map(ClienteMapper.INSTANCE::convertEntityToDto)
-                .orElseThrow(() -> new ClienteException("Invalid login or password"));
+        try{
+            var cliente = clienteRepository.findByLoginAndPassword(request.getLogin(), request.getPassword())
+                    .orElseThrow(() -> new ClienteException("Invalid login or password"));
+
+            if (!cliente.isActive()) {
+                throw new ClienteException("Cliente is not active");
+            }
+
+            return ClienteMapper.INSTANCE.convertEntityToDto(cliente);
+
+        }catch (Exception e){
+            throw new ClienteException("Error authenticating cliente: " + e.getMessage());
+        }
+
     }
 
     public ClienteDeseableResponse deseableCliente(String cpf) {
@@ -55,7 +67,26 @@ public class ClienteService {
                     .convertEntityToClienteDeseableResponse(cliente);
 
         } catch (Exception e) {
-            throw new ClienteException("Error registering cliente: " + e.getMessage());
+            throw new ClienteException("Error deseable cliente: " + e.getMessage());
+        }
+    }
+
+    public ClienteActivateResponse activateCliente(String cpf) {
+        try {
+
+            var cliente = clienteValidation.findByCpf(cpf);
+
+            if (cliente.isActive()) {
+                throw new ClienteException("Cliente is already active");
+            }
+            cliente.setActive(true);
+            clienteRepository.save(cliente);
+
+            return ClienteMapper.INSTANCE
+                    .convertEntityToClienteActivateResponse(cliente);
+
+        } catch (Exception e) {
+            throw new ClienteException("Error activate cliente: " + e.getMessage());
         }
     }
 
