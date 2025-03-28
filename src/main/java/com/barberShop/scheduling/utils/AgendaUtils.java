@@ -4,9 +4,13 @@ import com.barberShop.scheduling.domain.Agenda;
 import com.barberShop.scheduling.domain.Barbearia;
 import com.barberShop.scheduling.domain.Profissional;
 import com.barberShop.scheduling.domain.ServicosBarbearia;
+import com.barberShop.scheduling.dto.request.AgendaRequest;
+import com.barberShop.scheduling.dto.request.AgendaRequestWithoutJornada;
+import com.barberShop.scheduling.dto.response.AgendaResponse;
 import com.barberShop.scheduling.enums.JornadaEnum;
 import com.barberShop.scheduling.enums.StatusAgenda;
 import com.barberShop.scheduling.exception.ServicosBarbeariaException;
+import com.barberShop.scheduling.mapper.AgendaMapper;
 import com.barberShop.scheduling.repository.AgendaRepository;
 import com.barberShop.scheduling.repository.AgendamentoRepository;
 import com.barberShop.scheduling.repository.ProfissionalRepository;
@@ -30,6 +34,47 @@ public class AgendaUtils {
     private final AgendaRepository agendaRepository;
     private final AgendamentoRepository agendamentoRepository;
     private final AgendaValidation validation;
+    private final AgendaMapper agendaMapper = AgendaMapper.INSTANCE;
+
+
+
+
+    public List<AgendaResponse> generateScheduleForPeriod(AgendaRequestWithoutJornada request,
+                                                          LocalTime startTime, LocalTime endTime,
+                                                          JornadaEnum jornada) {
+        ValidacaoResultado validationResult = validation.validateProfessionalAndBarberShop(
+                request.getCpfProfissional(),
+                request.getCnpjBarbearia(),
+                request.getServicosBarbeariaId()
+        );
+
+        List<Agenda> agendaEntities = new ArrayList<>();
+        LocalTime currentTime = startTime;
+        boolean hasConflict = true;
+
+        while (currentTime.isBefore(endTime)) {
+            if (!validation.checkScheduleConflictPeriod(request.getCpfProfissional(), request.getDate(), currentTime)) {
+                Agenda agenda = new Agenda();
+                agenda.setProfissional(validationResult.getProfissional());
+                agenda.setBarbearia(validationResult.getBarbearia());
+                agenda.setServicosBarbearia(validationResult.getServicosBarbearia());
+                agenda.setDate(request.getDate());
+                agenda.setTime(currentTime);
+                agenda.setJornada(jornada);
+                agenda.setStatusAgenda(StatusAgenda.ABERTO);
+                agendaEntities.add(agenda);
+                hasConflict = false;
+            }
+            currentTime = currentTime.plusMinutes(30);
+        }
+
+        if (hasConflict) {
+            throw new ServicosBarbeariaException("Schedule conflict: the professional already has appointments for the entire period.");
+        }
+
+        agendaRepository.saveAll(agendaEntities);
+        return agendaMapper.convertEntityListToResponseList(agendaEntities);
+    }
 
     public void cancelAppointments(Agenda agenda) {
         var appointments = agendamentoRepository.findByAgenda(agenda);

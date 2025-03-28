@@ -2,6 +2,7 @@ package com.barberShop.scheduling.mapper;
 
 import com.barberShop.scheduling.domain.Cliente;
 import com.barberShop.scheduling.dto.request.ClienteRequest;
+import com.barberShop.scheduling.dto.response.ClienteActivateResponse;
 import com.barberShop.scheduling.dto.response.ClienteDeseableResponse;
 import com.barberShop.scheduling.dto.response.ClienteRegisterResponse;
 import com.barberShop.scheduling.dto.response.ClienteResponse;
@@ -25,6 +26,9 @@ public interface ClienteMapper {
 
     @Mapping(target = "message", constant = "Client successfully Deseable")
     ClienteDeseableResponse convertEntityToClienteDeseableResponse(Cliente cliente);
+
+    @Mapping(target = "message", constant = "Client successfully Activate")
+    ClienteActivateResponse convertEntityToClienteActivateResponse(Cliente cliente);
 
     List<ClienteResponse> convertListEntityToListResponse(Iterable<Cliente> cliente);
 

@@ -3,6 +3,7 @@ package com.barberShop.scheduling.controller;
 import com.barberShop.scheduling.domain.Cliente;
 import com.barberShop.scheduling.dto.request.ClienteRequest;
 import com.barberShop.scheduling.dto.request.LoginRequest;
+import com.barberShop.scheduling.dto.response.ClienteActivateResponse;
 import com.barberShop.scheduling.dto.response.ClienteDeseableResponse;
 import com.barberShop.scheduling.dto.response.ClienteRegisterResponse;
 import com.barberShop.scheduling.dto.response.ClienteResponse;
@@ -40,9 +41,15 @@ public class ClienteController {
         return ResponseEntity.ok(clienteService.authenticateCliente(request));
     }
 
-    @PutMapping("/{cpf}/deseable")
+    @PatchMapping("/deseable/{cpf}")
     public ResponseEntity<ClienteDeseableResponse> deseableCliente(@PathVariable String cpf) {
             var response = clienteService.deseableCliente(cpf);
             return ResponseEntity.ok(response);
         }
+
+    @PatchMapping("/activate/{cpf}")
+    public ResponseEntity<ClienteActivateResponse> activateCliente(@PathVariable String cpf) {
+        var response = clienteService.activateCliente(cpf);
+        return ResponseEntity.ok(response);
+    }
 }
