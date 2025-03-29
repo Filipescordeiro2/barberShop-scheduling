@@ -31,6 +31,13 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(AgendaException.class)
+    public ResponseEntity<?> handleAgendaException(AgendaException ex, WebRequest request) {
+        Map<String, String> errorResponse = new HashMap<>();
+        errorResponse.put("message", ex.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(BarbeariaException.class)
     public ResponseEntity<?> handleBarbeariaException(BarbeariaException ex, WebRequest request) {
         Map<String, String> errorResponse = new HashMap<>();

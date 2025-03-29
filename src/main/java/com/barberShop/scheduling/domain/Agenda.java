@@ -3,7 +3,6 @@ package com.barberShop.scheduling.domain;
 import com.barberShop.scheduling.enums.JornadaEnum;
 import com.barberShop.scheduling.enums.StatusAgenda;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

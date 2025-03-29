@@ -26,6 +26,18 @@ public enum ServicosEnum {
 
     private final String descricaoDetalhada;
 
+    public static boolean isValid(ServicosEnum servico) {
+        if (servico == null) {
+            return false;
+        }
+        for (ServicosEnum value : ServicosEnum.values()) {
+            if (value == servico) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static class ServicosEnumDeserializer extends JsonDeserializer<ServicosEnum> {
         @Override
         public ServicosEnum deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {
